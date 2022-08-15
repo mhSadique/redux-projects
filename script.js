@@ -11,6 +11,21 @@ const initialState = {
     value: 0,
 };
 
+// action creators
+const increment = (value) => {
+    return {
+        type: INCREMENT,
+        payload: value
+    }
+};
+
+const decrement = (value) => {
+    return {
+        type: DECREMENT,
+        payload: value
+    }
+}
+
 // create reducer function
 function counterReducer(state = initialState, action) {
     if (action.type === INCREMENT) {
@@ -43,15 +58,9 @@ store.subscribe(render);
 
 // button click listeners
 incrementEl.addEventListener("click", () => {
-    store.dispatch({
-        type: INCREMENT,
-        payload: 4
-    });
+    store.dispatch(increment(10));
 });
 
 decrementEl.addEventListener("click", () => {
-    store.dispatch({
-        type: DECREMENT,
-        payload: 2
-    });
+    store.dispatch(decrement(30));
 });
