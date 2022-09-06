@@ -22,7 +22,6 @@ const initialState = {
 };
 
 function counterReducer(state = initialState, action) {
-    // console.log('inside reducer start', state);
     if (action.type === INCREMENT) {
         return {
             ...state,
@@ -30,7 +29,7 @@ function counterReducer(state = initialState, action) {
                 ...state.counters,
                 [action.counterId]: { value: state.counters[action.counterId].value + action.incrementBy }
             }
-        }
+        };
     } else if (action.type === DECREMENT) {
         return {
             ...state,
@@ -38,7 +37,7 @@ function counterReducer(state = initialState, action) {
                 ...state.counters,
                 [action.counterId]: { value: state.counters[action.counterId].value - action.decrementBy }
             }
-        }
+        };
     } else if (action.type === ADD_COUNTER) {
         return {
             ...state,
@@ -47,7 +46,7 @@ function counterReducer(state = initialState, action) {
                 ...state.counters,
                 [state.countersCount + 1]: { value: 0 }
             }
-        }
+        };
     } else if (action.type === RESET) {
         const newCounters = state.counters;
         for (let key in newCounters) {
@@ -58,27 +57,19 @@ function counterReducer(state = initialState, action) {
             counters: {
                 ...newCounters
             }
-        }
+        };
     }
     else {
-        // console.log('inside reducer end', state);
         return state;
     }
 }
 
 const store = Redux.createStore(counterReducer);
 
-
 const render = () => {
     const counters = document.querySelectorAll('div[data-counter-id]');
-    // console.log('render called');
     const state = store.getState();
-    console.log('STATE', state);
-    // console.log('COUNTERS', counters);
     counters.forEach((counter, index) => {
-        console.log('COUNTER', counter);
-        console.log('ID', counter.dataset.counterId);
-        console.log(counter.dataset.counterId === String(index + 1));
         if (counter.dataset.counterId === String(index + 1)) {
             counter.innerText = state.counters[index + 1].value.toString();
         }
@@ -89,7 +80,6 @@ render();
 store.subscribe(render);
 
 function increase(counterId, incrementBy) {
-    console.log('inside increment');
     store.dispatch({
         type: INCREMENT,
         counterId,
@@ -98,7 +88,6 @@ function increase(counterId, incrementBy) {
 }
 
 function decrease(counterId, decrementBy) {
-    console.log('inside decrement');
     store.dispatch({
         type: DECREMENT,
         counterId,
@@ -106,20 +95,11 @@ function decrease(counterId, decrementBy) {
     });
 }
 
-resetButton.addEventListener('click', () => {
-    store.dispatch({
-        type: RESET
-    })
-})
-
-
 addCounterEl.addEventListener('click', () => {
     store.dispatch({
         type: ADD_COUNTER
     })
     const state = store.getState();
-    // console.log('inside zyx', state.countersCount);
-
     const div = document.createElement('div');
     div.className = 'mx-auto max-w-md mt-10 space-y-5';
     div.innerHTML = `
@@ -127,27 +107,33 @@ addCounterEl.addEventListener('click', () => {
                         <div id="counter" class="text-2xl font-semibold" data-counter-id=${state.countersCount}>${state.initialCount}</div>
                             <div class="flex space-x-3">
                                 <button 
-                                    id="increment" 
-                                    class="bg-indigo-400 text-white px-3 py-2 rounded shadow" data-increment-button-id="${state.countersCount}" onclick="increase(${state.countersCount},${5})">
+                                    class="bg-indigo-400 text-white px-3 py-2 rounded shadow" 
+                                    data-increment-button-id="${state.countersCount}" 
+                                    onclick="increase(${state.countersCount},${5})">
                                     Increment
                                 </button>
-                                <button id="decrement" class="bg-red-400 text-white px-3 py-2 rounded shadow" 
-                                data-decrement-button-id="${state.countersCount}" onclick="decrease(${state.countersCount},${5})">
+                                <button 
+                                class="bg-red-400 text-white px-3 py-2 rounded shadow" 
+                                data-decrement-button-id="${state.countersCount}" 
+                                onclick="decrease(${state.countersCount},${5})">
                                     Decrement
                                 </button>
                             </div>
                         </div>
                     `;
     countersEl.appendChild(div);
-    // console.log(`${initialState.countersCount}${5}`);
+})
 
+resetButton.addEventListener('click', () => {
+    store.dispatch({
+        type: RESET
+    })
+})
 
-    // document.querySelectorAll('div[data-counter-id]').forEach((item, index) => {
-    //     console.log(item.dataset.counterId)
-    //     console.log(item)
-    // })
-    console.log(document.querySelectorAll('div[data-counter-id]'));
+incrementEl.addEventListener('click', () => {
+    increase(1, 5)
+})
 
-    // const stateNew = store.getState();
-    // console.log('new', stateNew);
+decrementEl.addEventListener('click', () => {
+    decrease(1, 5)
 })
